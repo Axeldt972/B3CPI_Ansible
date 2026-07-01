@@ -1,0 +1,11 @@
+# ============================================================
+# Exemple de fichier vault — NE PAS COMMITTER vault.yml
+# Copier ce fichier : cp vault.yml.example vault.yml
+# Chiffrer avec    : ansible-vault encrypt vault.yml
+# ============================================================
+
+vault_ansible_user: "g3admin"
+vault_ansible_pass: "VOTRE_MOT_DE_PASSE"
+
+vault_glpi_db_user: "glpi_user"
+vault_glpi_db_pass: "VOTRE_MOT_DE_PASSE_GLPI"

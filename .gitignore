@@ -1,0 +1,25 @@
+# Credentials — NE JAMAIS COMMITTER
+group_vars/all/vault.yml
+*.vault
+*.secret
+.vault_pass
+.vault_password
+
+# Fichiers Ansible temporaires
+*.retry
+
+# macOS
+.DS_Store
+
+# Logs
+*.log
+
+# Fichiers de cache Ansible
+__pycache__/
+*.pyc
+.cache/
+
+# Clés SSH
+*.pem
+*.key
+id_rsa*

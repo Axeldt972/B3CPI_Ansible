@@ -1,0 +1,30 @@
+---
+# ============================================================
+# Playbook 01 — Mise à jour de toutes les VMs Linux — Groupe 3
+# Usage : ansible-playbook -i inventory.ini playbooks/01-update-all.yml
+# ============================================================
+- name: Mise à jour de toutes les VMs Linux du Groupe 3
+  hosts: linux
+  become: yes
+  tasks:
+    - name: Mise à jour du cache APT et upgrade des paquets
+      apt:
+        update_cache: yes
+        upgrade: dist
+        autoremove: yes
+        autoclean: yes
+      register: update_result
+
+    - name: Afficher le résultat
+      debug:
+        msg: "Mise à jour terminée sur {{ inventory_hostname }} ({{ ansible_host }})"
+
+    - name: Vérifier si un redémarrage est nécessaire
+      stat:
+        path: /var/run/reboot-required
+      register: reboot_required
+
+    - name: Signaler si un reboot est nécessaire
+      debug:
+        msg: "⚠️  REBOOT NÉCESSAIRE sur {{ inventory_hostname }}"
+      when: reboot_required.stat.exists

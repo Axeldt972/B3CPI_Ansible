@@ -1,0 +1,61 @@
+---
+# ============================================================
+# Variables globales — Groupe 3 — Projet Fil Rouge SOC
+# Credentials sensibles dans group_vars/all/vault.yml (ansible-vault, non versionné)
+# ============================================================
+
+groupe: "G3"
+domaine: "g3soc.local"
+
+# --- Réseau LAN (avant migration VLAN) ---
+ip_pfsense:        "192.168.30.1"
+ip_srv_ad_old:     "192.168.30.10"
+ip_srv_app_old:    "192.168.30.11"
+ip_suricata_old:   "192.168.30.12"
+ip_wazuh_old:      "192.168.30.13"
+ip_workstation_old:"192.168.30.99"
+
+# --- IPs cibles post-migration VLAN (guide v2, suffixe .10) ---
+ip_srv_ad:     "10.3.10.10"   # VLAN10
+ip_workstation:"10.3.20.10"   # VLAN20
+ip_srv_app:    "10.3.30.10"   # VLAN30
+ip_wazuh:      "10.3.40.10"   # VLAN40
+ip_suricata:   "10.3.50.10"   # VLAN50
+
+gateway_srv_ad:     "10.3.10.1"
+gateway_workstation:"10.3.20.1"
+gateway_srv_app:    "10.3.30.1"
+gateway_wazuh:      "10.3.40.1"
+gateway_suricata:   "10.3.50.1"
+
+vlans:
+  srv_ad:      { id: 10, network: "10.3.10.0/24", gw: "10.3.10.1" }
+  workstation: { id: 20, network: "10.3.20.0/24", gw: "10.3.20.1" }
+  srv_app:     { id: 30, network: "10.3.30.0/24", gw: "10.3.30.1" }
+  wazuh:       { id: 40, network: "10.3.40.0/24", gw: "10.3.40.1" }
+  suricata:    { id: 50, network: "10.3.50.0/24", gw: "10.3.50.1" }
+
+# --- Wazuh ---
+wazuh_manager_ip:    "10.3.40.10"
+wazuh_version:       "4.14.4"
+wazuh_agent_version: "4.14.4"
+
+# --- GLPI ---
+glpi_version:       "11.0.6"
+glpi_db_name:       "glpi"
+glpi_agent_version: "1.11"
+# glpi_db_user et glpi_db_pass → vault.yml
+
+# --- Active Directory ---
+ad_domain:  "g3soc.local"
+ad_netbios: "G3SOC"
+ad_server:  "192.168.30.10"
+
+# --- Accès SOCAT (ports IT-Server) ---
+socat_ssh_srv_app:     3222
+socat_ssh_suricata:    3223
+socat_ssh_wazuh:       3224
+socat_ssh_workstation: 3225
+
+# --- IT-Server ---
+it_server_tailscale: "100.98.133.72"

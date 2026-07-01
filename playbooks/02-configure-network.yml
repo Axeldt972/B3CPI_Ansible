@@ -1,0 +1,55 @@
+---
+# ============================================================
+# Playbook 02 — Configuration réseau de base — Groupe 3
+# Usage : ansible-playbook -i inventory.ini playbooks/02-configure-network.yml
+# ============================================================
+- name: Configuration réseau de base — Groupe 3
+  hosts: linux
+  become: yes
+  tasks:
+    - name: Configurer /etc/hosts avec toutes les VMs du G3
+      copy:
+        dest: /etc/hosts
+        content: |
+          127.0.0.1       localhost
+          127.0.1.1       {{ inventory_hostname }}
+
+          # === Groupe 3 — Réseau 192.168.30.0/24 ===
+          {{ ip_pfsense }}    G3-pfSense pfSense gateway
+          {{ ip_srv_ad }}     G3-SRV-AD srv-ad ad dc
+          {{ ip_srv_app }}    G3-SRV-APP srv-app glpi web
+          {{ ip_suricata }}   G3-SURICATA suricata ids
+          {{ ip_wazuh }}      G3-WAZUH wazuh siem
+          {{ ip_workstation }} G3-workstation workstation
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: Configurer le DNS vers pfSense
+      copy:
+        dest: /etc/resolv.conf
+        content: |
+          # DNS — Groupe 3
+          nameserver {{ ip_pfsense }}
+          nameserver 8.8.8.8
+          search {{ domaine }}
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: Vérifier la connectivité vers pfSense
+      command: ping -c 2 {{ ip_pfsense }}
+      register: ping_gw
+      ignore_errors: yes
+
+    - name: Vérifier la connectivité vers Internet
+      command: ping -c 2 8.8.8.8
+      register: ping_internet
+      ignore_errors: yes
+
+    - name: Résumé connectivité
+      debug:
+        msg: >
+          {{ inventory_hostname }} —
+          Gateway: {{ 'OK' if ping_gw.rc == 0 else 'ÉCHEC' }} |
+          Internet: {{ 'OK' if ping_internet.rc == 0 else 'ÉCHEC' }}
